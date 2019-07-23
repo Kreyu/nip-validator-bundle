@@ -60,13 +60,13 @@ Configuration reference:
 /**
  * @KreyuAssert\Nip({
  *     pattern = null,
- *     patternMessage = "This is not a valid NIP number."
- *     checksum = true
- *     checksumMessage = "This is not a valid NIP number."
- *     allowDashes = false
- *     requireDashes = false
- *     allowPrefix = true
- *     requirePrefix = false
+ *     patternMessage = "This is not a valid NIP number.",
+ *     checksum = true,
+ *     checksumMessage = "This is not a valid NIP number.",
+ *     allowDashes = false,
+ *     requireDashes = false,
+ *     allowPrefix = true,
+ *     requirePrefix = false,
  *     prefixLength = 2
  * })
  */
