@@ -30,9 +30,9 @@ class Nip extends Constraint
     ];
 
     public $pattern = null;
-    public $patternMessage = 'aThis is not a valid NIP number.';
+    public $patternMessage = 'This is not a valid NIP number.';
     public $checksum = true;
-    public $checksumMessage = 'bThis is not a valid NIP number.';
+    public $checksumMessage = 'This is not a valid NIP number.';
     public $allowDashes = false;
     public $requireDashes = false;
     public $allowPrefix = false;
