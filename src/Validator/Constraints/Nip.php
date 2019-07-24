@@ -39,3 +39,5 @@ class Nip extends Constraint
     public $requirePrefix = false;
     public $prefixLength = 2;
 }
+
+class_alias(Nip::class, 'Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\Tin');
