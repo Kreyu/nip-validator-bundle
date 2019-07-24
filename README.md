@@ -32,8 +32,8 @@ return [
 
 To use the validation constraint, import the following namespace with the alias or your liking: 
 
-```
-Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as KreyuAssert;
+```php
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as KreyuAssert;
 ``` 
 
 and then use it like any other Symfony validation constraint like so:
