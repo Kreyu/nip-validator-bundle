@@ -1,6 +1,7 @@
 {
   "name": "kreyu/nip-validator-bundle",
   "description": "Validate the NIP/TIN numbers with configurable validation constraint",
+  "keywords": ["nip", "tin", "validation", "constraint"],
   "type": "symfony-bundle",
   "license": "MIT",
   "authors": [
