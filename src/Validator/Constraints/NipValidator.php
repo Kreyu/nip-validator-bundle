@@ -24,9 +24,11 @@ class NipValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        if (!preg_match($this->getPattern($constraint), $value)) {
+        if (!preg_match($pattern = $this->getPattern($constraint), $value)) {
             $this->context->buildViolation($constraint->patternMessage)
                 ->setParameter('{{ value }}', $this->formatValue($value))
+                ->setParameter('{{ pattern }}', $pattern)
+                ->setInvalidValue($value)
                 ->setCode(Nip::INVALID_PATTERN_ERROR)
                 ->addViolation();
 
@@ -36,6 +38,7 @@ class NipValidator extends ConstraintValidator
         if ($constraint->checksum && !$this->validateChecksum($value, $constraint)) {
             $this->context->buildViolation($constraint->checksumMessage)
                 ->setParameter('{{ value }}', $this->formatValue($value))
+                ->setInvalidValue($value)
                 ->setCode(Nip::INVALID_CHECKSUM_ERROR)
                 ->addViolation();
 
@@ -50,7 +53,7 @@ class NipValidator extends ConstraintValidator
      * @param  Constraint|Nip   $constraint
      * @return string
      */
-    protected function validateChecksum($value, Constraint $constraint)
+    public function validateChecksum($value, Constraint $constraint)
     {
         preg_match_all('!\d+!', $value, $matches);
 
@@ -69,7 +72,7 @@ class NipValidator extends ConstraintValidator
      * @param  Constraint|Nip $constraint
      * @return string
      */
-    protected function getPattern(Constraint $constraint)
+    public function getPattern(Constraint $constraint)
     {
         if (null !== $constraint->pattern) {
             return $constraint->pattern;
@@ -81,7 +84,7 @@ class NipValidator extends ConstraintValidator
         if ($constraint->prefixLength > 0 && ($constraint->requirePrefix || $constraint->allowPrefix)) {
             $pattern .= '([A-z]{' . $constraint->prefixLength . '})';
 
-            if ($constraint->allowPrefix) {
+            if (!$constraint->requirePrefix) {
                 $pattern .= '?';
             }
         }
@@ -105,3 +108,5 @@ class NipValidator extends ConstraintValidator
         return $pattern;
     }
 }
+
+class_alias(NipValidator::class, 'Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\TinValidator');

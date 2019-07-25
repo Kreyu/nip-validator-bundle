@@ -13,8 +13,15 @@ namespace Kreyu\Bundle\NipValidatorBundle\Tests\Validator\Constraints;
 
 use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\Nip;
 use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\NipValidator;
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\Tin;
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\TinValidator;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
+/**
+ * @property-read NipValidator $validator
+ *
+ * @author Sebastian Wróblewski <kontakt@swroblewski.pl>
+ */
 class NipValidatorTest extends ConstraintValidatorTestCase
 {
     protected function createValidator()
@@ -73,6 +80,7 @@ class NipValidatorTest extends ConstraintValidatorTestCase
 
         $this->buildViolation($constraint->checksumMessage)
             ->setParameter('{{ value }}', '"'.$value.'"')
+            ->setInvalidValue($value)
             ->setCode(Nip::INVALID_CHECKSUM_ERROR)
             ->assertRaised();
     }
@@ -127,6 +135,7 @@ class NipValidatorTest extends ConstraintValidatorTestCase
 
         $this->buildViolation('My custom checksum message')
             ->setParameter('{{ value }}', '"'.$value.'"')
+            ->setInvalidValue($value)
             ->setCode(Nip::INVALID_CHECKSUM_ERROR)
             ->assertRaised();
     }
@@ -145,6 +154,8 @@ class NipValidatorTest extends ConstraintValidatorTestCase
 
         $this->buildViolation('My custom pattern message')
             ->setParameter('{{ value }}', '"'.$value.'"')
+            ->setParameter('{{ pattern }}', $this->validator->getPattern($constraint))
+            ->setInvalidValue($value)
             ->setCode(Nip::INVALID_PATTERN_ERROR)
             ->assertRaised();
     }
@@ -200,6 +211,8 @@ class NipValidatorTest extends ConstraintValidatorTestCase
 
         $this->buildViolation($constraint->patternMessage)
             ->setParameter('{{ value }}', '"'.$value.'"')
+            ->setParameter('{{ pattern }}', $this->validator->getPattern($constraint))
+            ->setInvalidValue($value)
             ->setCode(Nip::INVALID_PATTERN_ERROR)
             ->assertRaised();
     }
@@ -256,19 +269,19 @@ class NipValidatorTest extends ConstraintValidatorTestCase
         $this->assertNoViolation();
     }
 
-    public function getWithPrefix()
+    public function getWithoutPrefix()
     {
         return [
-            ['PL 3774988224'],
-            ['EN 3784078972'],
-            ['DE 7745293711'],
-            ['AA 1239664059'],
-            ['BB 1589583841'],
+            ['3774988224'],
+            ['3784078972'],
+            ['7745293711'],
+            ['1239664059'],
+            ['1589583841'],
         ];
     }
 
     /**
-     * @dataProvider getWithPrefix
+     * @dataProvider getWithoutPrefix
      */
     public function testRequiringPrefixShouldNotAcceptWithout($value)
     {
@@ -281,6 +294,8 @@ class NipValidatorTest extends ConstraintValidatorTestCase
 
         $this->buildViolation($constraint->patternMessage)
             ->setParameter('{{ value }}', '"'.$value.'"')
+            ->setParameter('{{ pattern }}', $this->validator->getPattern($constraint))
+            ->setInvalidValue($value)
             ->setCode(Nip::INVALID_PATTERN_ERROR)
             ->assertRaised();
     }
@@ -327,7 +342,19 @@ class NipValidatorTest extends ConstraintValidatorTestCase
 
         $this->buildViolation($constraint->patternMessage)
             ->setParameter('{{ value }}', '"'.$value.'"')
+            ->setParameter('{{ pattern }}', $this->validator->getPattern($constraint))
+            ->setInvalidValue($value)
             ->setCode(Nip::INVALID_PATTERN_ERROR)
             ->assertRaised();
+    }
+
+    public function testNipConstraintClassAlias()
+    {
+        $this->assertInstanceOf(Nip::class, new Tin());
+    }
+
+    public function testNipValidatorClassAlias()
+    {
+        $this->assertInstanceOf(NipValidator::class, new TinValidator());
     }
 }

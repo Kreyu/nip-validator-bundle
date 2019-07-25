@@ -54,6 +54,14 @@ class Company
 }
 ```
 
+##### Note:
+
+Constraint and validator classes are aliased to the `Tin` and `TinValidator` classes.
+    
+- `Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\Tin`
+- `Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\TinValidator`
+
+
 ### Pattern validation
 
 By default, the only accepted format is a string of characters without the prefix nor dashes.
@@ -138,6 +146,13 @@ class Company
 }
 ```
 
+You can use the following parameters in this message:
+
+| Parameter | Description |
+| --- | --- |
+| `{{ value }}` | The current (invalid value) |
+| `{{ pattern }}` | The regular expression pattern used in the validation |
+
 #### Usage of a custom regular expression
 
 If the default functionality does not meet your needs, consider using the `pattern` option:
@@ -205,6 +220,12 @@ class Company
     private $nip;
 }
 ```
+
+You can use the following parameters in this message:
+
+| Parameter | Description |
+| --- | --- |
+| `{{ value }}` | The current (invalid value) |
 
 ## License
 
