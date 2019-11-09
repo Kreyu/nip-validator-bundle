@@ -348,6 +348,12 @@ class NipValidatorTest extends ConstraintValidatorTestCase
             ->assertRaised();
     }
 
+    public function testNullValueIsIgnored()
+    {
+        $this->validator->validate(null, new Nip());
+        $this->assertNoViolation();
+    }
+
     public function testNipConstraintClassAlias()
     {
         $this->assertInstanceOf(Nip::class, new Tin());

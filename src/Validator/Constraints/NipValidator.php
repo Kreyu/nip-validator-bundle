@@ -21,9 +21,15 @@ class NipValidator extends ConstraintValidator
 {
     /**
      * {@inheritDoc}
+     *
+     * @var Nip $constraint
      */
     public function validate($value, Constraint $constraint)
     {
+        if (null === $value) {
+            return;
+        }
+
         if (!preg_match($pattern = $this->getPattern($constraint), $value)) {
             $this->context->buildViolation($constraint->patternMessage)
                 ->setParameter('{{ value }}', $this->formatValue($value))
