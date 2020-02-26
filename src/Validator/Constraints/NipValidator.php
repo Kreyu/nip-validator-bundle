@@ -14,7 +14,6 @@ namespace Kreyu\Bundle\NipValidatorBundle\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
-use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 /**
  * @author Sebastian Wróblewski <kontakt@swroblewski.pl>
@@ -37,7 +36,7 @@ class NipValidator extends ConstraintValidator
         }
 
         if (!is_scalar($value) && !(\is_object($value) && method_exists($value, '__toString'))) {
-            throw new UnexpectedValueException($value, 'string');
+            throw new UnexpectedTypeException($value, 'string');
         }
 
         $value = (string) $value;

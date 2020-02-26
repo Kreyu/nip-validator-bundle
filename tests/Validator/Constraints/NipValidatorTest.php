@@ -15,7 +15,6 @@ use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\Nip;
 use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\NipValidator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
-use Symfony\Component\Validator\Exception\UnexpectedValueException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 /**
@@ -371,13 +370,13 @@ class NipValidatorTest extends ConstraintValidatorTestCase
 
     public function testInvalidValueTypeThrowsException()
     {
-        $this->expectException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedTypeException::class);
         $this->validator->validate([], new Nip());
     }
 
     public function testObjectValueWithoutToStringMethodThrowsException()
     {
-        $this->expectException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedTypeException::class);
         $this->validator->validate(new class {}, new Nip());
     }
 
