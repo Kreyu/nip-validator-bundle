@@ -13,8 +13,9 @@ namespace Kreyu\Bundle\NipValidatorBundle\Tests\Validator\Constraints;
 
 use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\Nip;
 use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\NipValidator;
-use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\Tin;
-use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\TinValidator;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\Component\Validator\Exception\UnexpectedValueException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 /**
@@ -354,13 +355,60 @@ class NipValidatorTest extends ConstraintValidatorTestCase
         $this->assertNoViolation();
     }
 
-    public function testNipConstraintClassAlias()
+    public function testEmptyValueIsIgnored()
     {
-        $this->assertInstanceOf(Nip::class, new Tin());
+        $this->validator->validate('', new Nip());
+        $this->assertNoViolation();
     }
 
-    public function testNipValidatorClassAlias()
+    public function testInvalidConstraintThrowsException()
     {
-        $this->assertInstanceOf(NipValidator::class, new TinValidator());
+        $constraint = new class extends Constraint {};
+
+        $this->expectException(UnexpectedTypeException::class);
+        $this->validator->validate(null, $constraint);
+    }
+
+    public function testInvalidValueTypeThrowsException()
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->validator->validate([], new Nip());
+    }
+
+    public function testObjectValueWithoutToStringMethodThrowsException()
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->validator->validate(new class {}, new Nip());
+    }
+
+    public function testObjectValueWithToStringMethodIsAccepted()
+    {
+        $value = new class {
+            public function __toString()
+            {
+                return '1111111111';
+            }
+        };
+
+        $this->validator->validate($value, new Nip());
+        $this->assertNoViolation();
+    }
+
+    public function testConstraintNormalizer()
+    {
+        $this->validator->validate('111111111', new Nip([
+            'normalizer' => function ($value) {
+                return $value . '1';
+            },
+        ]));
+        $this->assertNoViolation();
+    }
+
+    public function testConstraintNormalizerWithPhpFunction()
+    {
+        $this->validator->validate('   1111111111 ', new Nip([
+            'normalizer' => 'trim',
+        ]));
+        $this->assertNoViolation();
     }
 }

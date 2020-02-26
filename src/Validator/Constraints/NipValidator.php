@@ -13,6 +13,8 @@ namespace Kreyu\Bundle\NipValidatorBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 /**
  * @author Sebastian Wróblewski <kontakt@swroblewski.pl>
@@ -26,8 +28,26 @@ class NipValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        if (null === $value) {
+        if (!$constraint instanceof Nip) {
+            throw new UnexpectedTypeException($constraint, Nip::class);
+        }
+
+        if (null === $value || '' === $value) {
             return;
+        }
+
+        if (!is_scalar($value) && !(\is_object($value) && method_exists($value, '__toString'))) {
+            throw new UnexpectedValueException($value, 'string');
+        }
+
+        $value = (string) $value;
+
+        if ('' === $value) {
+            return;
+        }
+
+        if (null !== $constraint->normalizer) {
+            $value = ($constraint->normalizer)($value);
         }
 
         if (!preg_match($pattern = $this->getPattern($constraint), $value)) {
@@ -114,5 +134,3 @@ class NipValidator extends ConstraintValidator
         return $pattern;
     }
 }
-
-class_alias(NipValidator::class, 'Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\TinValidator');

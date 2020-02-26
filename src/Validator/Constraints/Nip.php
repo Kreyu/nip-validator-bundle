@@ -12,6 +12,7 @@
 namespace Kreyu\Bundle\NipValidatorBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Exception\InvalidArgumentException;
 
 /**
  * @Annotation
@@ -38,6 +39,14 @@ class Nip extends Constraint
     public $allowPrefix = false;
     public $requirePrefix = false;
     public $prefixLength = 2;
-}
+    public $normalizer;
 
-class_alias(Nip::class, 'Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\Tin');
+    public function __construct($options = null)
+    {
+        parent::__construct($options);
+
+        if (null !== $this->normalizer && !\is_callable($this->normalizer)) {
+            throw new InvalidArgumentException(sprintf('The "normalizer" option must be a valid callable ("%s" given).', \is_object($this->normalizer) ? \get_class($this->normalizer) : \gettype($this->normalizer)));
+        }
+    }
+}

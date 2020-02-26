@@ -8,7 +8,7 @@ Validate the tax identification numbers with configurable validation constraint.
 ## Requirements
 
 - Symfony 3.4 or higher (4.x supported)
-- PHP 5.6 or higher
+- PHP 7.0 or higher
 
 ## Installation
 
@@ -53,14 +53,6 @@ class Company
     private $nip;
 }
 ```
-
-##### Note:
-
-Constraint and validator classes are aliased to the `Tin` and `TinValidator` classes.
-    
-- `Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\Tin`
-- `Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\TinValidator`
-
 
 ### Pattern validation
 
@@ -226,6 +218,28 @@ You can use the following parameters in this message:
 | Parameter | Description |
 | --- | --- |
 | `{{ value }}` | The current (invalid value) |
+
+#### Usage of a callable normalizer
+
+It is possible to define the PHP callable to apply on the value before the validation, using the `normalizer` option:
+
+```php
+<?php
+
+namespace App\Entity;
+
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as KreyuAssert;
+
+class Company
+{
+    /**
+     * @KreyuAssert\Nip(
+     *     normalizer="trim"
+     * )
+     */
+    private $nip;
+}
+```
 
 ## License
 
