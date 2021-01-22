@@ -8,7 +8,7 @@ Validate the tax identification numbers with configurable validation constraint.
 ## Requirements
 
 - Symfony validator ^3.4, ^4.0 or ^5.0
-- PHP ^7.0
+- PHP ^7.0 or ^8.0
 
 ## Installation
 
