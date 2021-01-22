@@ -7,8 +7,8 @@ Validate the tax identification numbers with configurable validation constraint.
 
 ## Requirements
 
-- Symfony validator ^3.4, ^4.0 or ^5.0
-- PHP ^7.0 or ^8.0
+- Symfony validator >=3.4
+- PHP >=7.0
 
 ## Installation
 
@@ -18,39 +18,69 @@ To download the bundle, require it using the Composer:
 $ composer require kreyu/nip-validator-bundle
 ```
 
-Then, enable the bundle in the `config/bundles.php` (or in `app/AppKernel.php`)
-
-```php
-// config/bundles.php
-return [
-    // ...
-    Kreyu\Bundle\NipValidatorBundle\KreyuNipValidatorBundle::class => ['all' => true],
-];
-```
-
 ## Usage
 
-To use the validation constraint, import the following namespace with the alias or your liking: 
-
-```php
-use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as KreyuAssert;
-``` 
-
-and then use it like any other Symfony validation constraint like so:
+Like with all Symfony validation constraints, you can apply it by using annotations:
 
 ```php
 <?php
 
 namespace App\Entity;
 
-use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as KreyuAssert;
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as Assert;
 
 class Company
 {
     /**
-     * @KreyuAssert\Nip()
+     * @Assert\Nip()
      */
     private $nip;
+}
+```
+
+or by using YAML:
+
+```yaml
+App\Entity\Company:
+    properties:
+        nip:
+            - Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\Nip: ~
+```
+
+or by using XML:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping https://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+
+    <class name="App\Entity\Company">
+        <property name="nip">
+            <constraint name="Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\Nip"/>
+        </property>
+    </class>
+</constraint-mapping>
+```
+
+or by using PHP:
+
+```php
+<?php
+
+namespace App\Entity;
+
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints\Nip;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+
+class Company
+{
+    private $nip;
+    
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('nip', new Nip());
+    }
 }
 ```
 
@@ -67,12 +97,12 @@ If you wish to allow or require the usage of the dashes, use the `allowDashes` a
 
 namespace App\Entity;
 
-use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as KreyuAssert;
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as Assert;
 
 class Company
 {
     /**
-     * @KreyuAssert\Nip(
+     * @Assert\Nip(
      *     allowDashes=true,
      *     requireDashes=true
      * )
@@ -97,12 +127,12 @@ Additionally, it is possible to modify the length of the prefix, using the `pref
 
 namespace App\Entity;
 
-use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as KreyuAssert;
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as Assert;
 
 class Company
 {
     /**
-     * @KreyuAssert\Nip(
+     * @Assert\Nip(
      *     allowPrefix=true,
      *     requirePrefix=true,
      *     prefixLength=2     
@@ -125,12 +155,12 @@ It is possible to customize the pattern violation message using the `patternMess
 
 namespace App\Entity;
 
-use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as KreyuAssert;
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as Assert;
 
 class Company
 {
     /**
-     * @KreyuAssert\Nip(
+     * @Assert\Nip(
      *     patternMessage="This is not a valid NIP number."
      * )
      */
@@ -154,12 +184,12 @@ If the default functionality does not meet your needs, consider using the `patte
 
 namespace App\Entity;
 
-use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as KreyuAssert;
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as Assert;
 
 class Company
 {
     /**
-     * @KreyuAssert\Nip(
+     * @Assert\Nip(
      *     pattern="/^(\d{2}.\d{3}.\d{3}.\d{2})$/"
      * )
      */
@@ -178,12 +208,12 @@ By default, the checksum is being validated. If you wish to disable this feature
 
 namespace App\Entity;
 
-use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as KreyuAssert;
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as Assert;
 
 class Company
 {
     /**
-     * @KreyuAssert\Nip(
+     * @Assert\Nip(
      *     checksum=false
      * )
      */
@@ -200,12 +230,12 @@ It is possible to customize the checksum violation message using the `checksumMe
 
 namespace App\Entity;
 
-use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as KreyuAssert;
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as Assert;
 
 class Company
 {
     /**
-     * @KreyuAssert\Nip(
+     * @Assert\Nip(
      *     checksumMessage="This is not a valid NIP number."
      * )
      */
@@ -228,12 +258,12 @@ It is possible to define the PHP callable to apply on the value before the valid
 
 namespace App\Entity;
 
-use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as KreyuAssert;
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as Assert;
 
 class Company
 {
     /**
-     * @KreyuAssert\Nip(
+     * @Assert\Nip(
      *     normalizer="trim"
      * )
      */
