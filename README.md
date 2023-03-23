@@ -40,6 +40,22 @@ class Company
 }
 ```
 
+or by using attributes:
+
+```php
+<?php
+
+namespace App\Entity;
+
+use Kreyu\Bundle\NipValidatorBundle\Validator\Constraints as Assert;
+
+class Company
+{
+    #[Assert\Nip]
+    private $nip;
+}
+```
+
 or by using YAML:
 
 ```yaml
