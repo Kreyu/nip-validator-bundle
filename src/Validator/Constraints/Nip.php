@@ -20,6 +20,7 @@ use Symfony\Component\Validator\Exception\InvalidArgumentException;
  *
  * @author Sebastian Wróblewski <kontakt@swroblewski.pl>
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 class Nip extends Constraint
 {
     const INVALID_PATTERN_ERROR = 'b2e5a844-1127-43dd-be56-861a5e37fd8e';
